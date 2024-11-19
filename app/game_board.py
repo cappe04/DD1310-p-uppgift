@@ -7,6 +7,8 @@ class GameBoard:
         self.discard_queue = collections.deque()
         self.add_queue = collections.deque()
 
+        self.generations = 0
+
     def __getitem__(self, cell):
         return cell in self.cell_buffer
 
@@ -28,6 +30,8 @@ class GameBoard:
             self.__update_cell(cell)
 
         self.__clear_queues()
+
+        self.generations += 1
 
     def __update_cell(self, cell):
         neightbours = 0

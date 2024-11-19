@@ -5,6 +5,16 @@ from app.gui.cell_viewer import CellViewer
 from app.game_board import GameBoard
 import app.template_loader as template_loader
 
+# ---------------------------------------------
+# TODO: add border option so it loops around
+# TODO: add target simulations, pause after X generations
+# TODO: add steps per tick
+# TODO: add widgets
+# TODO: add mouse checks in cell_viewer
+# ---------------------------------------------
+# TODO: add change in simulation speed
+# ---------------------------------------------
+
 class App:
     def __init__(self):
         
@@ -19,17 +29,14 @@ class App:
         
         
         self.game_board = GameBoard()
-        # TODO: add border option
-
-        for x, y in template_loader.load("templates/glidare.txt"):
-            self.game_board.toggle_cell(x, y)
 
         self.delta_time = self.clock.tick() * 0.001
 
         self.s_per_tick = 1 / GAME_TICK
         self.s_since_last_tick = 0
+        self.steps_per_tick = 1
 
-        self.simulation_paused = False
+        self.simulation_paused = True
 
     def mainloop(self):
         while self.is_running:
@@ -52,7 +59,8 @@ class App:
             pygame.display.flip()
 
     def tick(self):
-        self.game_board.step()
+        for _ in range(self.steps_per_tick):
+            self.game_board.step()
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -64,6 +72,17 @@ class App:
                         self.tick()
                     if event.key == pygame.K_SPACE:
                         self.simulation_paused = not self.simulation_paused
+                    if event.key == pygame.K_l:
+                        self.ask_open_file()
+                    if event.key == pygame.K_r:
+                        self.cell_viewer.zoom_factor = 1
+                        self.cell_viewer.viewbox_pos.x = 0
+                        self.cell_viewer.viewbox_pos.y = 0
+                    if event.key == pygame.K_p:
+                        print(self.cell_viewer.viewbox_pos)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.cell_viewer.toggle_cell(self.game_board)
 
 
         keys = pygame.key.get_pressed()
@@ -81,3 +100,10 @@ class App:
             self.cell_viewer.zoom(zoom_speed)
         if keys[pygame.K_DOWN]:
             self.cell_viewer.zoom(-zoom_speed)
+
+    def ask_open_file(self):
+        def callback(coords):
+            for x, y in coords:
+                self.game_board.toggle_cell(x + int(self.cell_viewer.viewbox_pos.x), y + int(self.cell_viewer.viewbox_pos.y))
+
+        template_loader.on_file_opened(callback)
