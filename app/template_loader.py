@@ -24,10 +24,21 @@ def __ask_open_file():
     root.destroy()
     return load_from_path(path)
 
-def __thread_wrapper(callback):
-    coords = __ask_open_file()
-    callback(coords)
 
+__open_file_dialogs = 0
 def on_file_opened(callback):
+    global __open_file_dialogs
+
+    if __open_file_dialogs > 0:
+        print("File dialog already opened!")
+        return
+    __open_file_dialogs += 1
+    
+    def __thread_wrapper(callback):
+        coords = __ask_open_file()
+        callback(coords)
+        global __open_file_dialogs
+        __open_file_dialogs -= 1
+    
     thread = Thread(target=__thread_wrapper, args=(callback,))
     thread.start()

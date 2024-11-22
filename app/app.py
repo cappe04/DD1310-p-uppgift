@@ -2,6 +2,7 @@ import pygame
 
 from app.config import *
 from app.gui.cell_viewer import CellViewer
+from app.gui.button import Button
 from app.game_board import GameBoard
 import app.template_loader as template_loader
 
@@ -26,6 +27,10 @@ class App:
 
         # widgets
         self.cell_viewer = CellViewer(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT, CELL_SIZE)
+        self.load_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.8), "Load Figure", self.ask_open_file)
+        self.clear_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.4), "Clear Screen", lambda: ...)
+        self.next_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.7), "Next Frame", lambda: ...)
+        self.pause_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.6), "Pause", lambda: ...)
         
         
         self.game_board = GameBoard()
@@ -34,7 +39,7 @@ class App:
 
         self.s_per_tick = 1 / GAME_TICK
         self.s_since_last_tick = 0
-        self.steps_per_tick = 1
+        self.steps_per_tick = 4
 
         self.simulation_paused = True
 
@@ -52,8 +57,18 @@ class App:
                     self.tick()
                 self.s_since_last_tick = 0
 
+            self.load_button.update()
+            self.clear_button.update()
+            self.pause_button.update()
+            self.next_button.update()
+
             self.cell_viewer.draw_view(self.game_board)
             self.display.blit(self.cell_viewer, (0, 0, self.cell_viewer.width, self.cell_viewer.height))
+
+            self.load_button.draw(self.display)
+            self.clear_button.draw(self.display)
+            self.pause_button.draw(self.display)
+            self.next_button.draw(self.display)
 
             self.delta_time = self.clock.tick() * 0.001
             pygame.display.flip()
