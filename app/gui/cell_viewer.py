@@ -59,6 +59,9 @@ class CellViewer(pygame.Surface):
         gen_text = text.get_text(f"Generation: {game_board.generations}", WHITE, "Consolas", 20)
         self.blit(gen_text, (self.width * 0.2, 0, gen_text.get_width(), gen_text.get_height()))
 
+        if not game_board.size is None:
+            self.draw_border(game_board.size)
+
         # Marker
         pygame.draw.line(self, WHITE, (self.width / 2 - 5, self.height / 2), (self.width / 2 + 5, self.height / 2))
         pygame.draw.line(self, WHITE, (self.width / 2, self.height / 2 - 5), (self.width / 2, self.height / 2 + 5))
@@ -75,14 +78,25 @@ class CellViewer(pygame.Surface):
 
     def draw_cursor_highlight(self):
         mouse = pygame.mouse.get_pos()
+        if mouse[0] > self.width: return
 
         cell = self.transform_to_cell(*mouse)
         screen_pos = self.transform_to_screen(*cell)
 
         pygame.draw.rect(self, (0, 0, 0, 0), (*screen_pos, self.cell_size, self.cell_size), width=2)
 
+    def draw_border(self, size):
+        x0, y0 = self.transform_to_screen(0, 0)
+        x1, y1 = self.transform_to_screen(*size)
+        
+        pygame.draw.line(self, WHITE, (x0, 0), (x0, WINDOW_HEIGHT))
+        pygame.draw.line(self, WHITE, (x1, 0), (x1, WINDOW_HEIGHT))
+        pygame.draw.line(self, WHITE, (0, y0), (WINDOW_WIDTH, y0))
+        pygame.draw.line(self, WHITE, (0, y1), (WINDOW_WIDTH, y1))
+
     def toggle_cell(self, game_board):
         mouse = pygame.mouse.get_pos()
+        if mouse[0] > self.width: return
     
         cell = self.transform_to_cell(*mouse)
 
