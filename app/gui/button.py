@@ -3,7 +3,9 @@ import pygame
 from app.gui.clickable import Clickable
 from app.gui.text import get_text
 from app.config import *
+from app.gui.widgets import widget
 
+@widget(layer="button")
 class Button(Clickable):
 
     hover_scaleup = 2
