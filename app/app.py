@@ -3,15 +3,17 @@ import pygame
 from app.config import *
 from app.gui.cell_viewer import CellViewer
 from app.gui.button import Button
+from app.gui.entry import Entry, LabelEntry
 from app.game_board import GameBoard
 import app.template_loader as template_loader
+import app.gui.widgets as widgets
 
 # ---------------------------------------------
-# TODO: add border option so it loops around
 # TODO: add target simulations, pause after X generations
 # TODO: add steps per tick
 # TODO: add widgets
 # TODO: add mouse checks in cell_viewer
+# TODO: koordinater ska ligga i tillåtet intevall?? alltså alla??
 # ---------------------------------------------
 # TODO: add change in simulation speed
 # ---------------------------------------------
@@ -32,6 +34,10 @@ class App:
         self.next_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.7), "Next Frame", lambda: ...)
         self.pause_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.6), "Pause", lambda: ...)
         
+        # self.step_entry = Entry((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.2), height=self.next_button.height)
+        
+        self.step_entry = LabelEntry((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.3), "Steps:", ("Consolas", 20), start_text="0001")
+        self.target_entry = LabelEntry((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.2), "Target:", ("Consolas", 20), start_text="0000")
         
         self.game_board = GameBoard()
 
@@ -42,6 +48,8 @@ class App:
         self.steps_per_tick = 4
 
         self.simulation_paused = True
+
+        self.keylogger = set()
 
     def mainloop(self):
         while self.is_running:
@@ -57,10 +65,15 @@ class App:
                     self.tick()
                 self.s_since_last_tick = 0
 
-            self.load_button.update()
-            self.clear_button.update()
-            self.pause_button.update()
-            self.next_button.update()
+            # self.load_button.update()
+            # self.clear_button.update()
+            # self.pause_button.update()
+            # self.next_button.update()
+            widgets.update("button")
+            widgets.update("label_entry", self.keylogger)
+
+            # self.step_entry.update(self.keylogger)
+            # self.target_entry.update(self.keylogger)
 
             self.cell_viewer.draw_view(self.game_board)
             self.display.blit(self.cell_viewer, (0, 0, self.cell_viewer.width, self.cell_viewer.height))
@@ -69,6 +82,11 @@ class App:
             self.clear_button.draw(self.display)
             self.pause_button.draw(self.display)
             self.next_button.draw(self.display)
+            self.step_entry.draw(self.display)
+            self.target_entry.draw(self.display)
+
+            # widgets.draw("button", self.display)
+            # widgets.draw("label_entry", self.display)
 
             self.delta_time = self.clock.tick() * 0.001
             pygame.display.flip()
@@ -78,6 +96,7 @@ class App:
             self.game_board.step()
 
     def handle_events(self):
+        self.keylogger.clear()
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.is_running = False
@@ -93,8 +112,8 @@ class App:
                         self.cell_viewer.zoom_factor = 1
                         self.cell_viewer.viewbox_pos.x = 0
                         self.cell_viewer.viewbox_pos.y = 0
-                    if event.key == pygame.K_p:
-                        print(self.cell_viewer.viewbox_pos)
+
+                    self.keylogger.add(event.key)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.cell_viewer.toggle_cell(self.game_board)

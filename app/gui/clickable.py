@@ -37,7 +37,7 @@ class Clickable(pygame.Surface):
             self.on_hover()
             if self.is_pressed:
                 self.on_click()
-        else:
+        elif self.is_pressed:
             self.on_unclick()
 
     def draw(self, target):
