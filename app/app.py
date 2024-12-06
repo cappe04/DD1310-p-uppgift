@@ -1,19 +1,22 @@
 import pygame
 
 from app.config import *
-from app.gui.cell_viewer import CellViewer
-from app.gui.button import Button
-from app.gui.entry import Entry, LabelEntry
+# from app.gui.cell_viewer import CellViewer
+# from app.gui.button import Button
+# from app.gui.entry import Entry, LabelEntry
+
 from app.game_board import GameBoard
 import app.template_loader as template_loader
 import app.gui.widgets as widgets
+
+from app.gui import Button, LabelEntry, Text, CellViewer
 
 # ---------------------------------------------
 # TODO: add target simulations, pause after X generations
 # TODO: add steps per tick
 # TODO: add widgets
-# TODO: add mouse checks in cell_viewer
 # TODO: koordinater ska ligga i tillåtet intevall?? alltså alla??
+
 # ---------------------------------------------
 # TODO: add change in simulation speed
 # ---------------------------------------------
@@ -26,26 +29,26 @@ class App:
         self.clock = pygame.time.Clock()
 
         self.is_running = True
-
-        # widgets
-        self.cell_viewer = CellViewer(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT, CELL_SIZE)
-        self.load_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.8), "Load Figure", self.ask_open_file)
-        self.clear_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.4), "Clear Screen", lambda: ...)
-        self.next_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.7), "Next Frame", lambda: ...)
-        self.pause_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.6), "Pause", lambda: ...)
         
-        # self.step_entry = Entry((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.2), height=self.next_button.height)
+        # self.checkbox = Che
         
         self.step_entry = LabelEntry((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.3), "Steps:", ("Consolas", 20), start_text="0001")
         self.target_entry = LabelEntry((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.2), "Target:", ("Consolas", 20), start_text="0000")
         
         self.game_board = GameBoard()
 
+        # widgets
+        self.cell_viewer = CellViewer(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT, CELL_SIZE)
+        self.load_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.8), "Load Figure", self.ask_open_file)
+        self.clear_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.4), "Clear Screen", self.game_board.clear_board)
+        self.next_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.7), "Next Frame", self.tick)
+        self.pause_button = Button((WINDOW_WIDTH * 0.85, WINDOW_HEIGHT * 0.6), "Pause", self.pause_simulation)
+
         self.delta_time = self.clock.tick() * 0.001
 
         self.s_per_tick = 1 / GAME_TICK
         self.s_since_last_tick = 0
-        self.steps_per_tick = 4
+        self.steps_per_tick = 1
 
         self.simulation_paused = True
 
@@ -105,7 +108,7 @@ class App:
                     if event.key == pygame.K_RETURN:
                         self.tick()
                     if event.key == pygame.K_SPACE:
-                        self.simulation_paused = not self.simulation_paused
+                        self.pause_simulation()
                     if event.key == pygame.K_l:
                         self.ask_open_file()
                     if event.key == pygame.K_r:
@@ -141,3 +144,6 @@ class App:
                 self.game_board.toggle_cell(x + int(self.cell_viewer.viewbox_pos.x), y + int(self.cell_viewer.viewbox_pos.y))
 
         template_loader.on_file_opened(callback)
+
+    def pause_simulation(self):
+        self.simulation_paused = not self.simulation_paused

@@ -2,11 +2,14 @@ import collections
 
 
 class GameBoard:
+    """
+    A class that contains the cell data and 
+    """
     def __init__(self, size: tuple[int, int]|None=None):
         self.cell_buffer = set()
         self.discard_queue = collections.deque()
         self.add_queue = collections.deque()
-
+        
         self.size = size
 
         self.generations = 0
@@ -70,6 +73,9 @@ class GameBoard:
             self.cell_buffer.discard(self.get_border_adjusted((x, y)))
         else:
             self.cell_buffer.add(self.get_border_adjusted((x, y)))
+
+    def clear_board(self):
+        self.cell_buffer.clear()
 
 
         

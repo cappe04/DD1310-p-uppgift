@@ -9,7 +9,9 @@ import app.gui.text as text
 
 
 class CellViewer(pygame.Surface):
-    
+    """
+    A widget that draws a rectangular section of the gameboard
+    """
     def __init__(self, width, height, cell_size):
         super().__init__((width, height))
 
@@ -89,10 +91,12 @@ class CellViewer(pygame.Surface):
         x0, y0 = self.transform_to_screen(0, 0)
         x1, y1 = self.transform_to_screen(*size)
         
-        pygame.draw.line(self, WHITE, (x0, 0), (x0, WINDOW_HEIGHT))
-        pygame.draw.line(self, WHITE, (x1, 0), (x1, WINDOW_HEIGHT))
-        pygame.draw.line(self, WHITE, (0, y0), (WINDOW_WIDTH, y0))
-        pygame.draw.line(self, WHITE, (0, y1), (WINDOW_WIDTH, y1))
+        pygame.draw.rect(self, WHITE, (x0, y0, x1 - x0, y1 - y0), width=2)
+
+        # pygame.draw.line(self, WHITE, (x0, 0), (x0, WINDOW_HEIGHT))
+        # pygame.draw.line(self, WHITE, (x1, 0), (x1, WINDOW_HEIGHT))
+        # pygame.draw.line(self, WHITE, (0, y0), (WINDOW_WIDTH, y0))
+        # pygame.draw.line(self, WHITE, (0, y1), (WINDOW_WIDTH, y1))
 
     def toggle_cell(self, game_board):
         mouse = pygame.mouse.get_pos()
