@@ -4,10 +4,12 @@ from app.config import *
 import pygame
 
 class Checkbox(Clickable):
-    def __init__(self, x, y, width=10, height=10, checked=False):
-        super().__init__(x - width / 2, y - height / 2)
+    def __init__(self, parent, position, is_center, width=10, height=10, checked=False):
+        super().__init__(parent, position, is_center, width, height)
 
         self.checked = checked
+
+        self.surface = pygame.Surface((width, height))
 
     def on_click(self):
         self.checked = not self.checked
@@ -19,8 +21,8 @@ class Checkbox(Clickable):
         pass
 
     def draw(self, target):
-        self.fill(WHITE)
+        self.surface.fill(WHITE)
         if self.checked:
-            pygame.draw.line(self, BLACK, (1, 1), (self.width - 1, self.height - 1))
-            pygame.draw.line(self, BLACK, (self.width - 1, 1), (0, self.height - 1))
-        super().draw(target)
+            pygame.draw.line(self.surface, BLACK, (1, 1), (self.width - 2, self.height - 2), width=2)
+            pygame.draw.line(self.surface, BLACK, (self.width - 2, 1), (1, self.height - 2), width=2)
+        target.blit(self.surface, (self.global_x, self.global_y))

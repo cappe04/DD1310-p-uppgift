@@ -1,40 +1,42 @@
 import pygame
 
 from app.gui.clickable import Clickable
+from app.gui.label import Label
+from app.gui.frame import Frame
 from app.gui.text import get_text
 from app.config import *
-from app.gui.widgets import widget
+from app.gui.widget import Widget
 
 
-@widget(layer="entry")
 class Entry(Clickable):
 
     inner_padding = 2
     outer_padding = 5
 
-    def __init__(self, center, font=("Consolas", 20), bg=GRAY, text="0000", max_length=4, width=None, height=None):
+    def __init__(self, parent, position, is_center, font=("Consolas", 20), bg=GRAY, text="0000", max_length=4, width=None, height=None):
         self.font = font
         self.max_length = max_length
         self.message = text
+        self.bg = bg
 
         self.text = get_text(self.message, BLACK, *self.font)
         width = width or (self.text.get_width() + self.outer_padding * 2 + self.inner_padding * 2)
         height = height or (self.text.get_height() + self.outer_padding * 2 + self.inner_padding * 2)
 
-        x, y = center
-
-        super().__init__(x - width / 2, y - height / 2, width, height)
+        super().__init__(parent, position, is_center, width, height)
 
         self.selected = False
 
-        self.fill(bg)
+        self.surface = pygame.Surface((width, height))
+
+        self.surface.fill(bg)
         self.update_text()
 
     def update_text(self):
-        pygame.draw.rect(self, WHITE if self.selected else LIGHT_GRAY, 
+        pygame.draw.rect(self.surface, WHITE if self.selected else LIGHT_GRAY, 
                          (self.outer_padding, self.outer_padding, self.width - self.outer_padding * 2, self.height - self.outer_padding * 2))
         self.text = get_text(self.message, BLACK, *self.font)
-        self.blit(self.text, (self.width / 2 - self.text.get_width() / 2, self.height / 2 - self.text.get_height() / 2))
+        self.surface.blit(self.text, (self.width / 2 - self.text.get_width() / 2, self.height / 2 - self.text.get_height() / 2))
 
     def message_append(self, char):
         message = self.message.lstrip("0")
@@ -50,21 +52,23 @@ class Entry(Clickable):
     def on_click(self):
         self.selected = True
         self.update_text()
+        pygame.draw.rect(self.surface, WHITE, (1, 1, self.width-2, self.height-2), width=1)
 
     def on_unclick(self):
         self.selected = False
         self.update_text()
+        pygame.draw.rect(self.surface, self.bg, (1, 1, self.width-2, self.height-2), width=1)
 
     def on_hover(self):
         pass
 
-    def update(self, keylogger):
-        super().update()
+    def update(self, e):
+        super().update(e)
 
         if not self.selected:
             return
         
-        for key in keylogger:
+        for key in e.keylogger:
             if key == pygame.K_BACKSPACE:
                 self.message_pop()
 
@@ -73,36 +77,39 @@ class Entry(Clickable):
 
         self.update_text()
 
-
-@widget(layer="label_entry")
-class LabelEntry:
-    def __init__(self, center, text, font, start_text="0000", bg=GRAY, padding=10, **entry_options):
-        self.text = get_text(text, WHITE, *font)
-        
-        self.padding = padding
-        self.center = center
-
-        label_width = self.text.get_width() + padding * 2
-        label_height = self.text.get_height() + padding * 2
-
-        self.entry = Entry((0, 0), text=start_text, height=label_height, **entry_options)
-
-        self.width = label_width + self.entry.width
-        self.height = label_height
-
-        self.entry.x = center[0] - self.width / 2 + label_width
-        self.entry.y = center[1] - self.height / 2
-
-        self.surface = pygame.Surface((self.width, self.height))
-        self.surface.fill(bg)
-
-    def update(self, keylogger):
-        self.entry.update(keylogger)
+    def get_numeric(self):
+        return int(self.message.lstrip("0"))
+    
+    def get_str(self):
+        return self.message.lstrip("0")
 
     def draw(self, target):
-        self.surface.blit(self.text, (self.padding, self.padding))
-        target.blit(self.surface, (self.center[0] - self.width / 2, self.center[1] - self.height / 2))
-        self.entry.draw(target)
+        draw_surface = self.surface
+            
+
+        target.blit(draw_surface, (self.global_x, self.global_y))
+        
+
+class LabelEntry(Widget):
+    def __init__(self, parent, position, is_center, label, font=("Consolas", 20), bg=GRAY, **entry_options):
+
+        self.frame = Frame(None, (0, 0), False, 0, 0, bg)
+
+        self.label = Label(self.frame, (0, 0), False, label, WHITE, font, padding=5, bg=bg)
+        self.entry = Entry(self.frame, (self.label.width, 0), False, font=font, bg=bg, height=self.label.height, **entry_options)
+
+        self.frame.width = self.label.width + self.entry.width
+        self.frame.height = self.label.height + self.entry.height
+
+        super().__init__(parent, position, is_center, self.frame.width, self.frame.height)
+
+        self.frame.update_position((self.global_x, self.global_y), False)
+
+    def update(self, e):
+        self.frame.update(e)
+
+    def draw(self, target):
+        self.frame.draw(target)
 
 
 

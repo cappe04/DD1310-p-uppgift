@@ -1,3 +1,4 @@
+import os
 from tkinter.filedialog import askopenfilename
 import tkinter as tk
 
@@ -8,10 +9,23 @@ def load_from_path(path: str):
     Reads file at "path" and return a generator with tuples of coordinates for
     each cell with format (x, y)
     """
-    with open(path) as file:
-        for coord in file:
-            x, y = map(int, coord.strip().split(" "))
-            yield (x, y)
+
+    try:
+        if not os.path.exists(path):
+            return None
+
+        coords = []
+        with open(path) as file:
+            for coord in file:
+                x, y = map(int, coord.strip().split(" "))
+                # yield (x, y)
+                coords.append((x, y))
+        return coords
+    
+    except (FileNotFoundError, ValueError) as e: # borde inte få FileNotFound, men bara för att vara säker
+        print("Invalid foramt or path.")
+        return None
+
 
 def __ask_open_file():
     """
