@@ -76,6 +76,7 @@ class GameBoard:
 
     def clear_board(self):
         self.cell_buffer.clear()
+        self.generations = 0
 
 
         

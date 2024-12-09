@@ -17,13 +17,13 @@ class Clickable(Widget):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return self.global_x < mouse_x < self.global_x + self.width and self.global_y < mouse_y < self.global_y + self.height
     
-    def on_hover(self):
+    def _on_hover(self):
         raise NotImplementedError
 
-    def on_click(self):
+    def _on_click(self):
         raise NotImplementedError
     
-    def on_unclick(self):
+    def _on_unclick(self):
         raise NotImplementedError
 
     def update(self, e: WidgetEventArgs):
@@ -32,8 +32,8 @@ class Clickable(Widget):
         self.__previous_frame_click = self.is_pressed
 
         if self.mouse_hover():
-            self.on_hover()
+            self._on_hover()
             if self.is_clicked:
-                self.on_click()
+                self._on_click()
         elif self.is_clicked:
-            self.on_unclick()
+            self._on_unclick()

@@ -11,13 +11,13 @@ class Checkbox(Clickable):
 
         self.surface = pygame.Surface((width, height))
 
-    def on_click(self):
+    def _on_click(self):
         self.checked = not self.checked
     
-    def on_unclick(self):
+    def _on_unclick(self):
         pass
     
-    def on_hover(self):
+    def _on_hover(self):
         pass
 
     def draw(self, target):

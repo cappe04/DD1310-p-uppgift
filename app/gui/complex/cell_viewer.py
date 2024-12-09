@@ -93,11 +93,6 @@ class CellViewer(pygame.Surface):
         
         pygame.draw.rect(self, WHITE, (x0, y0, x1 - x0, y1 - y0), width=2)
 
-        # pygame.draw.line(self, WHITE, (x0, 0), (x0, WINDOW_HEIGHT))
-        # pygame.draw.line(self, WHITE, (x1, 0), (x1, WINDOW_HEIGHT))
-        # pygame.draw.line(self, WHITE, (0, y0), (WINDOW_WIDTH, y0))
-        # pygame.draw.line(self, WHITE, (0, y1), (WINDOW_WIDTH, y1))
-
     def toggle_cell(self, game_board):
         mouse = pygame.mouse.get_pos()
         if mouse[0] > self.width: return

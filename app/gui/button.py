@@ -26,12 +26,12 @@ class Button(Clickable):
         self.surface.fill(self.bg)
         self.surface.blit(self.text, (self.padding, self.padding, self.text.get_width(), self.text.get_height()))
 
-        self.on_click = on_click
+        self._on_click = on_click
 
-    def on_unclick(self):
+    def _on_unclick(self):
         pass
 
-    def on_hover(self):
+    def _on_hover(self):
         pass
     
     def draw(self, target):

@@ -49,17 +49,19 @@ class Entry(Clickable):
     def message_pop(self):
         self.message = f"{self.message[:-1]:{"0"}>{self.max_length}}"
 
-    def on_click(self):
+    def _on_click(self):
         self.selected = True
+        self.message = "0000"
         self.update_text()
         pygame.draw.rect(self.surface, WHITE, (1, 1, self.width-2, self.height-2), width=1)
 
-    def on_unclick(self):
+    def _on_unclick(self):
         self.selected = False
         self.update_text()
         pygame.draw.rect(self.surface, self.bg, (1, 1, self.width-2, self.height-2), width=1)
+        self.on_unclick()
 
-    def on_hover(self):
+    def _on_hover(self):
         pass
 
     def update(self, e):
@@ -78,7 +80,9 @@ class Entry(Clickable):
         self.update_text()
 
     def get_numeric(self):
-        return int(self.message.lstrip("0"))
+        value = self.message.lstrip("0")
+        value = "0" if value == "" else value
+        return int(value)
     
     def get_str(self):
         return self.message.lstrip("0")
@@ -88,31 +92,7 @@ class Entry(Clickable):
             
 
         target.blit(draw_surface, (self.global_x, self.global_y))
-        
 
-class LabelEntry(Widget):
-    def __init__(self, parent, position, is_center, label, font=("Consolas", 20), bg=GRAY, **entry_options):
-
-        self.frame = Frame(None, (0, 0), False, 0, 0, bg)
-
-        self.label = Label(self.frame, (0, 0), False, label, WHITE, font, padding=5, bg=bg)
-        self.entry = Entry(self.frame, (self.label.width, 0), False, font=font, bg=bg, height=self.label.height, **entry_options)
-
-        self.frame.width = self.label.width + self.entry.width
-        self.frame.height = self.label.height + self.entry.height
-
-        super().__init__(parent, position, is_center, self.frame.width, self.frame.height)
-
-        self.frame.update_position((self.global_x, self.global_y), False)
-
-    def update(self, e):
-        self.frame.update(e)
-
-    def draw(self, target):
-        self.frame.draw(target)
-
-
-
-        
-
-
+    def on_unclick(self):
+        """ Overideable funtion for handling events """
+        pass

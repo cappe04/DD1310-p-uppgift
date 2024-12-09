@@ -37,24 +37,29 @@ class App:
 
         self.side_panel = Frame(None, (WINDOW_WIDTH * 0.7, 0), False, WINDOW_WIDTH * 0.3, WINDOW_HEIGHT, bg=DARK_DARK_GRAY)
 
-        self.header_label = Label(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.1), True, "Game of Life", WHITE, ("Consolas", 20), bg=DARK_DARK_GRAY)
+        self.header_label = Label(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.08), True, "Game of Life", WHITE, ("Consolas", 30), bg=DARK_DARK_GRAY)
 
+        self.step_entry = LabelEntry(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.39), True, "Steps:", bg=DARK_DARK_GRAY, text="0001")
+        self.target_entry = LabelEntry(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.22), True, "Target:", bg=DARK_DARK_GRAY, text="0000")
+
+        self.pause_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.26), True, "Pause / Play", self.pause_simulation)
+        self.next_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.43), True, "Next Frame", self.tick)
+        self.clear_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.7), True, "Clear Screen", self.game_board.clear_board)
         self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.8), True, "Load Figure", self.ask_open_file)
-        self.clear_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.4), True, "Clear Screen", self.game_board.clear_board)
-        self.next_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.7), True, "Next Frame", self.tick)
-        self.pause_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.6), True, "Pause / Play", self.pause_simulation)
         
-        self.step_entry = LabelEntry(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.3), True, "Steps:", bg=DARK_DARK_GRAY, text="0001")
-        self.target_entry = LabelEntry(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.2), True, "Target:", bg=DARK_DARK_GRAY, text="0000")
 
-        self.bounds_checkbox = Checkbox(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.9), True)
+        # self.bounds_checkbox = Checkbox(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.9), True)
         
 
         self.delta_time = self.clock.tick() * 0.001
 
         self.s_per_tick = 1 / GAME_TICK
         self.s_since_last_tick = 0
-        self.steps_per_tick = 1
+        self.steps_per_tick = self.step_entry.entry.get_numeric()
+        self.step_target = 0
+
+        self.step_entry.entry.on_unclick = self.update_steps_per_tick
+        self.target_entry.entry.on_unclick = self.update_target_steps
 
         self.simulation_paused = True
 
@@ -85,7 +90,12 @@ class App:
             pygame.display.flip()
 
     def tick(self):
-        for _ in range(self.steps_per_tick):
+        steps = self.steps_per_tick
+        if self.game_board.generations < self.step_target and self.step_target - self.game_board.generations <= self.steps_per_tick:
+            steps = self.step_target - self.game_board.generations
+            self.simulation_paused = True
+
+        for _ in range(steps):
             self.game_board.step()
 
     def handle_events(self):
@@ -142,3 +152,11 @@ class App:
 
     def pause_simulation(self):
         self.simulation_paused = not self.simulation_paused
+
+    def update_steps_per_tick(self):
+        steps_per_tick = self.step_entry.entry.get_numeric()
+        self.steps_per_tick = max(steps_per_tick, 1)
+
+    def update_target_steps(self):
+        target = self.target_entry.entry.get_numeric()
+        self.step_target = target
