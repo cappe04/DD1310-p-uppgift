@@ -4,10 +4,10 @@ import tkinter as tk
 
 from threading import Thread
 
-def load_from_path(path: str):
+def load_from_path(path: str) -> list[tuple[int, int]] | None:
     """
-    Reads file at "path" and return a generator with tuples of coordinates for
-    each cell with format (x, y)
+    Reads file at "path" and returns a list with tuples of coordinates for each cell with format (x, y) or
+    None if unable to load or format file at path.
     """
 
     try:
@@ -27,10 +27,11 @@ def load_from_path(path: str):
         return None
 
 
-def __ask_open_file():
+def __ask_open_file() -> list[tuple[int, int]] | None:
     """
     Gives the user a "ask open file" dialog. This blocks the current thread.
-    Returns a generator with tuples of coordinates for each cell with format (x, y)
+    Returns a list with tuples of coordinates for each cell with format (x, y) or
+    None if unable to load or format file at path.
     """
     root = tk.Tk()
     root.withdraw()
@@ -41,6 +42,11 @@ def __ask_open_file():
 
 __open_file_dialogs = 0
 def on_file_opened(callback):
+    """
+    Gives the user a "ask open file" dialog and exectues callback with a list
+    of coordinates or None.
+    """
+
     global __open_file_dialogs
 
     if __open_file_dialogs > 0:
@@ -49,6 +55,7 @@ def on_file_opened(callback):
     __open_file_dialogs += 1
     
     def __thread_wrapper(callback):
+        """ Wraper function for thread """
         coords = __ask_open_file()
         callback(coords)
         global __open_file_dialogs
