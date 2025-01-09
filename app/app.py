@@ -1,25 +1,12 @@
 import pygame
 
 from app.config import *
-# from app.gui.cell_viewer import CellViewer
-# from app.gui.button import Button
-# from app.gui.entry import Entry, LabelEntry
 
 from app.game_board import GameBoard
 from app.gui.widget import WidgetEventArgs
 import app.template_loader as template_loader
 
-from app.gui import Button, LabelEntry, Entry, Text, CellViewer, Frame, Label, Checkbox
-
-# ---------------------------------------------
-# TODO: add target simulations, pause after X generations
-# TODO: add steps per tick
-# TODO: add widgets
-# TODO: koordinater ska ligga i tillåtet intevall?? alltså alla??
-
-# ---------------------------------------------
-# TODO: add change in simulation speed
-# ---------------------------------------------
+from app.gui import Button, LabelEntry, CellViewer, Frame, Label
 
 class App:
     def __init__(self):
@@ -48,22 +35,17 @@ class App:
         self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.8), True, "Load Figure", self.ask_open_file)
         
 
-        # self.bounds_checkbox = Checkbox(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.9), True)
-        
-
         self.delta_time = self.clock.tick() * 0.001
 
         self.s_per_tick = 1 / GAME_TICK
         self.s_since_last_tick = 0
-        self.steps_per_tick = self.step_entry.entry.get_numeric()
+        self.steps_per_tick = 1
         self.step_target = 0
 
         self.step_entry.entry.on_unclick = self.update_steps_per_tick
         self.target_entry.entry.on_unclick = self.update_target_steps
 
         self.simulation_paused = True
-
-        self.keylogger = set()
 
     def mainloop(self):
         while self.is_running:

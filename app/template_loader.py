@@ -18,7 +18,6 @@ def load_from_path(path: str) -> list[tuple[int, int]] | None:
         with open(path) as file:
             for coord in file:
                 x, y = map(int, coord.strip().split(" "))
-                # yield (x, y)
                 coords.append((x, y))
         return coords
     

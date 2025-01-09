@@ -49,6 +49,13 @@ class CellViewer(pygame.Surface):
         self.fill(DARK_GRAY)
 
         for x, y in self.viewbox_cells():
+
+            if not game_board.size is None:
+                self.draw_border(game_board.size)
+
+                if not (0 <= x < game_board.size[0] and 0 <= y < game_board.size[1]): # ta bort för cool effekt :)
+                    continue
+
             if game_board[x, y]:
                 screen_x, screen_y = self.transform_to_screen(x, y)
                 pygame.draw.rect(self, LIGHT_GRAY, (screen_x, screen_y, self.cell_size, self.cell_size))
@@ -61,8 +68,8 @@ class CellViewer(pygame.Surface):
         gen_text = text.get_text(f"Generation: {game_board.generations}", WHITE, "Consolas", 20)
         self.blit(gen_text, (self.width * 0.2, 0, gen_text.get_width(), gen_text.get_height()))
 
-        if not game_board.size is None:
-            self.draw_border(game_board.size)
+        # if not game_board.size is None:
+        #     self.draw_border(game_board.size)
 
         # Marker
         pygame.draw.line(self, WHITE, (self.width / 2 - 5, self.height / 2), (self.width / 2 + 5, self.height / 2))

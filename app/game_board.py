@@ -5,7 +5,7 @@ class GameBoard:
     """
     A class that contains the cell data and 
     """
-    def __init__(self, size: tuple[int, int]|None=None):
+    def __init__(self, size: tuple[int, int] | None=None):
         self.cell_buffer = set()
         self.discard_queue = collections.deque()
         self.add_queue = collections.deque()
