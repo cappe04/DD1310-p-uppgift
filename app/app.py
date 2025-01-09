@@ -9,7 +9,7 @@ import app.template_loader as template_loader
 from app.gui import Button, LabelEntry, CellViewer, Frame, Label
 
 class App:
-    def __init__(self):
+    def __init__(self, game_size: tuple[int, int] | None = None):
         
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Game of Life")
@@ -17,7 +17,7 @@ class App:
 
         self.is_running = True
         
-        self.game_board = GameBoard()
+        self.game_board = GameBoard(game_size)
 
         # widgets
         self.cell_viewer = CellViewer(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT, CELL_SIZE)

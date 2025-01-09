@@ -1,7 +1,3 @@
-
-
-from typing import Self
-
 import pygame
 
 
@@ -18,7 +14,8 @@ class Widget:
 
     parent_widgets = {}
 
-    def __init__(self, parent: Widget | None, position: tuple[int, int], is_center: bool, width: int, height: int) -> Self: # type: ignore
+    def __init__(self, parent, position: tuple[int, int], is_center: bool, width: int, height: int):
+        """ Creates widget instance, may take parent widget as either a Wiget or None """
         self.parent = parent
         self.width = width
         self.height = height
@@ -51,7 +48,7 @@ class Widget:
         """ Checks if widget is parent """
         return self in self.parent_widgets.keys()
 
-    def get_children(self) -> list[Widget]: # type: ignore
+    def get_children(self):
         """ Returns a list of widgets children """
         return self.parent_widgets.get(self, [])
     

@@ -4,7 +4,8 @@ from app.gui.widget import Widget
 from app.gui.text import get_text
 
 class Label(Widget):
-    def __init__(self, parent, position, is_center, text, color, font, padding=0, bg=BLACK):
+    """ Label Widget class for creating text on screen. """
+    def __init__(self, parent: Widget, position: Position, is_center: bool, text: str, color: Color, font: Font, padding=0, bg=BLACK):
         self.bg = bg
         self.padding = padding
 
@@ -19,7 +20,9 @@ class Label(Widget):
         self.surface.blit(self.text, (self.padding, self.padding))
 
     def update(self, e):
+        """ Not needed for Label as it's static. """
         pass
 
     def draw(self, target):
+        """ Draws the label on the screen. """
         target.blit(self.surface, (self.global_x, self.global_y))

@@ -6,6 +6,8 @@ from app.config import *
 
 
 class Button(Clickable):
+    
+    """ Button widget class """
 
     hover_scaleup = 2
 
