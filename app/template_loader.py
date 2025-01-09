@@ -28,6 +28,7 @@ def load_from_path(path: str) -> list[tuple[int, int]] | None:
 
 def __ask_open_file() -> list[tuple[int, int]] | None:
     """
+    -- Private Function -- 
     Gives the user a "ask open file" dialog. This blocks the current thread.
     Returns a list with tuples of coordinates for each cell with format (x, y) or
     None if unable to load or format file at path.
@@ -43,7 +44,7 @@ __open_file_dialogs = 0
 def on_file_opened(callback):
     """
     Gives the user a "ask open file" dialog and exectues callback with a list
-    of coordinates or None.
+    of coordinates or None as argument. This executes in a new thread.
     """
 
     global __open_file_dialogs

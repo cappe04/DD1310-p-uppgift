@@ -9,19 +9,21 @@ import app.template_loader as template_loader
 from app.gui import Button, LabelEntry, CellViewer, Frame, Label
 
 class App:
+    """ Class to manage the the game-logic combined with the GUI. """
     def __init__(self, game_size: tuple[int, int] | None = None):
         
+        # Essential for pygame
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("Game of Life")
         self.clock = pygame.time.Clock()
 
-        self.is_running = True
         
         self.game_board = GameBoard(game_size)
 
-        # widgets
+        # --- Widgets ---
         self.cell_viewer = CellViewer(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT, CELL_SIZE)
 
+        # Frame to manange all the widgets in the left side panel.
         self.side_panel = Frame(None, (WINDOW_WIDTH * 0.7, 0), False, WINDOW_WIDTH * 0.3, WINDOW_HEIGHT, bg=DARK_DARK_GRAY)
 
         self.header_label = Label(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.08), True, "Game of Life", WHITE, ("Consolas", 30), bg=DARK_DARK_GRAY)
@@ -32,8 +34,11 @@ class App:
         self.pause_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.26), True, "Pause / Play", self.pause_simulation)
         self.next_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.43), True, "Next Frame", self.tick)
         self.clear_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.7), True, "Clear Screen", self.game_board.clear_board)
-        self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.8), True, "Load Figure", self.ask_open_file)
+        self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.8), True, "Load Figure", self.load_template)
         
+
+        self.is_running = True
+        self.simulation_paused = True
 
         self.delta_time = self.clock.tick() * 0.001
 
@@ -45,9 +50,8 @@ class App:
         self.step_entry.entry.on_unclick = self.update_steps_per_tick
         self.target_entry.entry.on_unclick = self.update_target_steps
 
-        self.simulation_paused = True
-
     def mainloop(self):
+        """ The mainloop of the program. """
         while self.is_running:
             
             self.display.fill(WHITE)
@@ -61,8 +65,10 @@ class App:
                     self.tick()
                 self.s_since_last_tick = 0
 
+            # Updates widgets
             self.side_panel.update(event_args)
 
+            # Draws Widgets
             self.cell_viewer.draw_view(self.game_board)
             self.display.blit(self.cell_viewer, (0, 0, self.cell_viewer.width, self.cell_viewer.height))
 
@@ -72,7 +78,9 @@ class App:
             pygame.display.flip()
 
     def tick(self):
+        """ Execute Game tick -- Simulates {steps_per_tick} number of Game steps. """
         steps = self.steps_per_tick
+        # Pause at step target:
         if self.game_board.generations < self.step_target and self.step_target - self.game_board.generations <= self.steps_per_tick:
             steps = self.step_target - self.game_board.generations
             self.simulation_paused = True
@@ -80,7 +88,11 @@ class App:
         for _ in range(steps):
             self.game_board.step()
 
-    def handle_events(self):
+    def handle_events(self) -> WidgetEventArgs: # If App was more compilacted, this would return FrameEventArgs instead.
+        """
+        Handles the events such as Mousepresses and Keypresses. Rturn WidgetEventArgs with a
+        set of keys that was pressed during the frame. 
+        """
         keylogger = set()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -92,7 +104,7 @@ class App:
                 if event.key == pygame.K_SPACE:
                     self.pause_simulation()
                 if event.key == pygame.K_l:
-                    self.ask_open_file()
+                    self.load_template()
                 if event.key == pygame.K_r:
                     self.cell_viewer.zoom_factor = 1
                     self.cell_viewer.viewbox_pos.x = 0
@@ -122,7 +134,8 @@ class App:
 
         return WidgetEventArgs(keylogger)
 
-    def ask_open_file(self):
+    def load_template(self):
+        """ Gives the user a file dialog and loads the selected template. """
         def callback(coords):
             if coords is None:
                 return
@@ -133,12 +146,15 @@ class App:
         template_loader.on_file_opened(callback)
 
     def pause_simulation(self):
+        """ Pausees the simulation by setting flag. """
         self.simulation_paused = not self.simulation_paused
 
     def update_steps_per_tick(self):
+        """ Updates the steps_per_tick attribute to the vaules in step_entry. """
         steps_per_tick = self.step_entry.entry.get_numeric()
         self.steps_per_tick = max(steps_per_tick, 1)
 
     def update_target_steps(self):
+        """ Updates step target to the vaules in target_entry. """
         target = self.target_entry.entry.get_numeric()
         self.step_target = target

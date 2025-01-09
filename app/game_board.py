@@ -61,7 +61,7 @@ class GameBoard:
 
         # Adds to queue, must be done this way as
         # the other cells yet to update might be relying
-        # on the current state of the cell.
+        # on the current state of this cell.
         if alive and not 2 <= neightbours <= 3:
             self.discard_queue.append(cell)
         elif neightbours == 3:
