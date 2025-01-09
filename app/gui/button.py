@@ -31,23 +31,27 @@ class Button(Clickable):
         self._on_click = on_click
 
     def _on_unclick(self):
+        """ Inherited from Clickable, not used. """
         pass
 
     def _on_hover(self):
+        """ Inherited from Clickable, not used. """
         pass
     
     def draw(self, target):
+        """ Draws the button. """
+        # Scales the button and hightlights it if hoverd
         hover = self.mouse_hover()
         x = self.global_x - hover * self.hover_scaleup
         y = self.global_y - hover * self.hover_scaleup
         width = self.width + hover * self.hover_scaleup * 2
         height = self.height + hover * self.hover_scaleup * 2
         
-
         draw_surface = pygame.transform.scale(self.surface, (width, height))
         if hover:
             pygame.draw.rect(draw_surface, self.fg, (2, 2, width-4, height-4), width=2)
 
+        # Changes color when button is clicked
         if self.is_pressed and hover:
             pygame.draw.rect(draw_surface, self.bg, (0, 0, width, height))
 

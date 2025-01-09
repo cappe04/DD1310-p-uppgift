@@ -24,3 +24,4 @@ LIGHT_GRAY = (200, 200, 200)
 type Color = tuple[int]
 type Font = tuple[str, int]
 type Position = tuple[int, int]
+type Cell = tuple[int, int]

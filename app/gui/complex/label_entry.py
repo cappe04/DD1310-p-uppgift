@@ -6,6 +6,7 @@ from app.gui.entry import Entry
 
 
 class LabelEntry(Widget):
+    """ An entry with a descriptive label. LabelEntry widget class. """
     def __init__(self, parent, position, is_center, label, font=("Consolas", 20), bg=GRAY, **entry_options):
 
         self.frame = Frame(None, (0, 0), False, 0, 0, bg)
@@ -21,7 +22,9 @@ class LabelEntry(Widget):
         self.frame.update_position((self.global_x, self.global_y), False)
 
     def update(self, e):
+        """ Updates the widget """
         self.frame.update(e)
 
     def draw(self, target):
+        """ Draws the widget """
         self.frame.draw(target)
