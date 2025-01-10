@@ -1,5 +1,5 @@
 import pygame
-
+from app.config import Position
 
 class WidgetEventArgs:
     """ Contains data that is passed to each widget each frame """
@@ -14,7 +14,7 @@ class Widget:
 
     parent_widgets = {}
 
-    def __init__(self, parent, position: tuple[int, int], is_center: bool, width: int, height: int):
+    def __init__(self, parent, position: Position, is_center: bool, width: int, height: int):
         """ Creates widget instance, may take parent widget as either a Wiget or None """
         self.parent = parent
         self.width = width

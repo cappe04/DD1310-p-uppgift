@@ -1,12 +1,13 @@
 import pygame
 
 from app.gui.widget import Widget, WidgetEventArgs
+from app.config import Position
 
 
 class Clickable(Widget):
     """ To be inherited, used for widgets that needs to be clicked. """
     
-    def __init__(self, parent, position, is_center, width, height):
+    def __init__(self, parent: Widget, position: Position, is_center: bool, width: int, height: int):
         super().__init__(parent, position, is_center, width, height)
 
 

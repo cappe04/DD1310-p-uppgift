@@ -21,7 +21,7 @@ class GameBoard:
 
     @staticmethod
     def get_surroundings(x, y):
-        """ Return a generator that yields the surrounding cell, excluding the given cell. Like a donut. """
+        """ Returns a generator that yields the surrounding cells, excluding the given cell. Like a donut. """
         for i in range(y-1, y+2):
             for j in range(x-1, x+2):
                 if not (j == x and i == y):

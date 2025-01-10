@@ -1,6 +1,6 @@
 import pygame
 from app.config import *
-from app.gui.widget import Widget
+from app.gui.widget import Widget, WidgetEventArgs
 from app.gui.text import get_text
 
 class Label(Widget):
@@ -19,7 +19,7 @@ class Label(Widget):
         self.surface.fill(self.bg)
         self.surface.blit(self.text, (self.padding, self.padding))
 
-    def update(self, e):
+    def update(self, e: WidgetEventArgs):
         """ Not needed for Label as it's static. """
         pass
 

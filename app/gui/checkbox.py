@@ -1,11 +1,12 @@
 from app.gui.clickable import Clickable
+from app.gui.widget import Widget
 from app.config import *
 
 import pygame
 
 class Checkbox(Clickable):
     """ Checkbox widget class. """
-    def __init__(self, parent, position, is_center, width=10, height=10, checked=False):
+    def __init__(self, parent: Widget, position: Position, is_center: bool, width=10, height=10, checked=False):
         super().__init__(parent, position, is_center, width, height)
 
         self.checked = checked

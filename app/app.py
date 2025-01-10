@@ -10,7 +10,11 @@ from app.gui import Button, LabelEntry, CellViewer, Frame, Label
 
 class App:
     """ Class to manage the the game-logic combined with the GUI. """
-    def __init__(self, game_size: tuple[int, int] | None = None):
+    def __init__(self, board_size: tuple[int, int] | None = None):
+        """
+        board_size: tuple[int, int] | None -- Size of gameboard.
+        Will loop around at edges. If None, gameboard if infinte.
+        """
         
         # Essential for pygame
         self.display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -18,7 +22,7 @@ class App:
         self.clock = pygame.time.Clock()
 
         
-        self.game_board = GameBoard(game_size)
+        self.game_board = GameBoard(board_size)
 
         # --- Widgets ---
         self.cell_viewer = CellViewer(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT, CELL_SIZE)

@@ -1,6 +1,7 @@
 import pygame
 
 from app.gui.clickable import Clickable
+from app.gui.widget import Widget
 from app.gui.text import get_text
 from app.config import *
 
@@ -11,7 +12,7 @@ class Button(Clickable):
 
     hover_scaleup = 2
 
-    def __init__(self, parent, position, is_center, text, on_click, fg=WHITE, bg=GRAY, font=("Consolas", 20), padding=10, width=None, height=None):
+    def __init__(self, parent: Widget, position: Position, is_center: bool, text: str, on_click, fg=WHITE, bg=GRAY, font=("Consolas", 20), padding=10, width=None, height=None):
         self.text = get_text(text, fg, *font)
 
         self.fg = fg

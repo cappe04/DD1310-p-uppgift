@@ -14,7 +14,7 @@ class Entry(Clickable):
     inner_padding = 2
     outer_padding = 5
 
-    def __init__(self, parent, position, is_center, font=("Consolas", 20), bg=GRAY, text="0000", max_length=4, width=None, height=None):
+    def __init__(self, parent: Widget, position: Position, is_center: bool, font=("Consolas", 20), bg=GRAY, text="0000", max_length=4, width=None, height=None):
         self.font = font
         self.max_length = max_length
         self.message = text

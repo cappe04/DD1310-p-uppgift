@@ -1,4 +1,4 @@
 import app
 
 if __name__ == "__main__":
-    app.run(game_size=None)
+    app.run(board_size=None)

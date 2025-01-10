@@ -7,7 +7,7 @@ from app.gui.entry import Entry
 
 class LabelEntry(Widget):
     """ An entry with a descriptive label. LabelEntry widget class. """
-    def __init__(self, parent, position, is_center, label, font=("Consolas", 20), bg=GRAY, **entry_options):
+    def __init__(self, parent: Widget, position: Position, is_center: bool, label: str, font=("Consolas", 20), bg=GRAY, **entry_options):
 
         self.frame = Frame(None, (0, 0), False, 0, 0, bg)
 
