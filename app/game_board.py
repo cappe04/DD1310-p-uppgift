@@ -12,7 +12,7 @@ class GameBoard:
         self.add_queue = collections.deque()
         
         self.size = size
-
+        
         self.generations = 0
 
     def __getitem__(self, cell: Cell) -> bool:

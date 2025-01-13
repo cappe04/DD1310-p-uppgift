@@ -37,9 +37,9 @@ class App:
 
         self.pause_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.26), True, "Pause / Play", self.pause_simulation)
         self.next_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.43), True, "Next Frame", self.tick)
-        self.clear_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.7), True, "Clear Screen", self.game_board.clear_board)
-        self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.8), True, "Load Figure", self.load_template)
-        
+        self.clear_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.6), True, "Clear Screen", self.game_board.clear_board)
+        self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.7), True, "Load Figure", self.load_template)        
+        self.quit_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.85), True, "Quit", self.quit())
 
         self.is_running = True
         self.simulation_paused = True
@@ -148,6 +148,10 @@ class App:
                 self.game_board.toggle_cell(x + int(self.cell_viewer.viewbox_pos.x), y + int(self.cell_viewer.viewbox_pos.y))
 
         template_loader.on_file_opened(callback)
+
+    def quit(self):
+        """ Closes the app. """
+        self.is_running = False
 
     def pause_simulation(self):
         """ Pausees the simulation by setting flag. """
