@@ -39,7 +39,7 @@ class App:
         self.next_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.43), True, "Next Frame", self.tick)
         self.clear_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.6), True, "Clear Screen", self.game_board.clear_board)
         self.load_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.7), True, "Load Figure", self.load_template)        
-        self.quit_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.85), True, "Quit", self.quit())
+        self.quit_button = Button(self.side_panel, (self.side_panel.width / 2, WINDOW_HEIGHT * 0.85), True, "Quit", self.quit)
 
         self.is_running = True
         self.simulation_paused = True
